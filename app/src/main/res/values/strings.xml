@@ -1,0 +1,9 @@
+<resources>
+    <!--GENERATED-->
+    <string name="app_name">Photo Stealer</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- SEARCH PAGE -->
+    <string name="scan">Scan</string>
+    <string name="url_hint">Write url for scan images</string>
+</resources>
