@@ -14,4 +14,6 @@ public class Constants {
     public static final String ASSETS_FONTS_DIR = "fonts/";
 
     public static final int TOOLBAR_ELEVATION_DEFAULT = 4;
+
+    public static final int DEFAULT_ANIMATION_DURATION = 300;
 }

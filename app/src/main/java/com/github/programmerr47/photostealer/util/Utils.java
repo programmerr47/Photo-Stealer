@@ -1,5 +1,10 @@
 package com.github.programmerr47.photostealer.util;
 
+import android.app.Activity;
+import android.content.Context;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,5 +37,11 @@ public class Utils {
         }
 
         return result;
+    }
+
+    public static void forceClearFocusOnView(Context applicationContext, View view) {
+        view.clearFocus();
+        InputMethodManager imm = (InputMethodManager) applicationContext.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
 }
