@@ -1,4 +1,4 @@
-package com.github.programmerr47.photostealer.view;
+package com.github.programmerr47.photostealer.representation.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;

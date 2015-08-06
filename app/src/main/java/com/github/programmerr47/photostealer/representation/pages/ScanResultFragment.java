@@ -1,20 +1,22 @@
-package com.github.programmerr47.photostealer.pages;
+package com.github.programmerr47.photostealer.representation.pages;
 
 import android.animation.Animator;
 import android.animation.AnimatorInflater;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
+import android.view.ViewTreeObserver;
 
-import com.github.programmerr47.photostealer.AnimationListener;
+import com.github.programmerr47.photostealer.representation.AnimationListener;
 import com.github.programmerr47.photostealer.R;
-import com.github.programmerr47.photostealer.adapters.items.PhotoItem;
+import com.github.programmerr47.photostealer.representation.adapters.PhotoAdapter;
+import com.github.programmerr47.photostealer.representation.adapters.items.PhotoItem;
 
 import java.util.List;
 
@@ -24,12 +26,14 @@ import java.util.List;
  */
 public class ScanResultFragment extends MainAcitivityFragment {
 
+    private static final int DEFAULT_NUM_OF_COLUMNS = 2;
+
     private AnimationListener mAnimationListener;
 
     private Toolbar mToolbar;
 
     private RecyclerView mPhotosView;
-    private RecyclerView.Adapter mPhotosAdapter;
+    private PhotoAdapter mPhotosAdapter;
 
     private List<PhotoItem> mPhotoItems;
 
@@ -69,6 +73,18 @@ public class ScanResultFragment extends MainAcitivityFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        mPhotosView.setLayoutManager(new GridLayoutManager(getActivity(), DEFAULT_NUM_OF_COLUMNS));
+        mPhotosView.getViewTreeObserver().addOnGlobalLayoutListener(
+                new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+                        mPhotosView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+
+                        mPhotosAdapter = new PhotoAdapter(mPhotoItems, mPhotosView.getMeasuredWidth() / DEFAULT_NUM_OF_COLUMNS);
+                        mPhotosView.setAdapter(mPhotosAdapter);
+                    }
+                });
     }
 
     @Override

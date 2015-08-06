@@ -1,4 +1,4 @@
-package com.github.programmerr47.photostealer.pages;
+package com.github.programmerr47.photostealer.representation.pages;
 
 import android.app.Activity;
 import android.app.Fragment;

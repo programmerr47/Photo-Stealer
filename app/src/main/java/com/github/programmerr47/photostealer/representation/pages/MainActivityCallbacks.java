@@ -1,8 +1,8 @@
-package com.github.programmerr47.photostealer.pages;
+package com.github.programmerr47.photostealer.representation.pages;
 
 import android.support.v7.widget.Toolbar;
 
-import com.github.programmerr47.photostealer.adapters.items.PhotoItem;
+import com.github.programmerr47.photostealer.representation.adapters.items.PhotoItem;
 
 import java.util.List;
 

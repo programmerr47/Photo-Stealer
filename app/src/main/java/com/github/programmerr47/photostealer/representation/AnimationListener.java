@@ -1,4 +1,4 @@
-package com.github.programmerr47.photostealer;
+package com.github.programmerr47.photostealer.representation;
 
 /**
  * @author Michael Spitsin

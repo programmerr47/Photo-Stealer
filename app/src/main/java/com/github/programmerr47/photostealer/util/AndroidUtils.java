@@ -6,7 +6,7 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.util.TypedValue;
 
-import com.github.programmerr47.photostealer.PhotoStealerApplication;
+import com.github.programmerr47.photostealer.representation.PhotoStealerApplication;
 
 /**
  * Some helpful functions related to android os.

@@ -1,10 +1,6 @@
-package com.github.programmerr47.photostealer.pages;
+package com.github.programmerr47.photostealer.representation.pages;
 
-import android.animation.Animator;
-import android.animation.AnimatorInflater;
-import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.ViewCompat;
@@ -15,17 +11,25 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.github.programmerr47.photostealer.R;
-import com.github.programmerr47.photostealer.adapters.items.PhotoItem;
+import com.github.programmerr47.photostealer.api.ApiGetMethod;
+import com.github.programmerr47.photostealer.api.ApiMethod;
+import com.github.programmerr47.photostealer.api.parsers.htmlparsers.PhotosParser;
+import com.github.programmerr47.photostealer.representation.adapters.items.PhotoItem;
+import com.github.programmerr47.photostealer.representation.tasks.ApiGetMethodTask;
+import com.github.programmerr47.photostealer.representation.tasks.AsyncTaskWithListener;
 import com.github.programmerr47.photostealer.util.AndroidUtils;
 import com.github.programmerr47.photostealer.util.Constants;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Michael Spitsin
  * @since 2015-08-06
  */
-public class ScanFragment extends MainAcitivityFragment implements View.OnClickListener {
+public class ScanFragment extends MainAcitivityFragment implements
+        View.OnClickListener,
+        AsyncTaskWithListener.OnTaskFinishedListener {
 
     private Toolbar mToolbar;
 
@@ -71,8 +75,30 @@ public class ScanFragment extends MainAcitivityFragment implements View.OnClickL
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.search_button) {
-            //TODO
-            getMainActivityCallbacks().goToScanResultFragment(new ArrayList<PhotoItem>());
+            String url = mUrlEditText.getText().toString();
+            ApiMethod<List<PhotoItem>> getPhotosMethod = new ApiGetMethod<List<PhotoItem>>()
+                    .setUrl(url)
+                    .setMethodResultParser(new PhotosParser());
+
+            ApiGetMethodTask<List<PhotoItem>> task = new ApiGetMethodTask<List<PhotoItem>>();
+            task.setOnTaskFinishedListener(this);
+            task.execute(getPhotosMethod);
+        }
+    }
+
+    @Override
+    public void onTaskFinished(String taskName, Object extraObject) {
+        int t = 5;
+        if (taskName.equals(ApiGetMethodTask.class.getName())) {
+            @SuppressWarnings("unchecked")
+            List<PhotoItem> items = (List<PhotoItem>) extraObject;
+
+            //TODO temp
+            if (items == null) {
+                items = new ArrayList<>();
+            }
+
+            getMainActivityCallbacks().goToScanResultFragment(items);
         }
     }
 

@@ -1,4 +1,4 @@
-package com.github.programmerr47.photostealer;
+package com.github.programmerr47.photostealer.representation;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -9,16 +9,15 @@ import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 
-import com.github.programmerr47.photostealer.adapters.items.PhotoItem;
-import com.github.programmerr47.photostealer.pages.MainActivityCallbacks;
-import com.github.programmerr47.photostealer.pages.ScanFragment;
-import com.github.programmerr47.photostealer.pages.ScanResultFragment;
+import com.github.programmerr47.photostealer.R;
+import com.github.programmerr47.photostealer.representation.adapters.items.PhotoItem;
+import com.github.programmerr47.photostealer.representation.pages.MainActivityCallbacks;
+import com.github.programmerr47.photostealer.representation.pages.ScanFragment;
+import com.github.programmerr47.photostealer.representation.pages.ScanResultFragment;
 
 import java.util.List;
 
