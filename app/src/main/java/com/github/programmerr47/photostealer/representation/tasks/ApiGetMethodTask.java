@@ -1,5 +1,7 @@
 package com.github.programmerr47.photostealer.representation.tasks;
 
+import android.util.Pair;
+
 import com.github.programmerr47.photostealer.api.ApiMethod;
 
 /**

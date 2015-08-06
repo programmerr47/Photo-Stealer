@@ -1,6 +1,7 @@
 package com.github.programmerr47.photostealer.representation.adapters.items;
 
 import android.net.Uri;
+import android.support.v4.view.ViewCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,8 @@ import android.view.ViewGroup;
 import com.github.programmerr47.photostealer.R;
 import com.github.programmerr47.photostealer.representation.PhotoStealerApplication;
 import com.github.programmerr47.photostealer.representation.adapters.holders.PhotoItemHolder;
+import com.github.programmerr47.photostealer.util.AndroidUtils;
+import com.github.programmerr47.photostealer.util.Constants;
 
 /**
  * @author Michael Spitsin

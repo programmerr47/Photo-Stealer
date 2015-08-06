@@ -102,7 +102,6 @@ public class ImageLoader {
                         public void run() {
                             if (bitmap != null) {
                                 mUrlViewBundle.second.setImageDrawable(td);
-                                mUrlViewBundle.second.setScaleType(ImageView.ScaleType.CENTER_CROP);
                                 td.startTransition(FADE_IN_TIME);
                             } else {
                                 mUrlViewBundle.second.setImageResource(LOADING_IMAGE_RES);

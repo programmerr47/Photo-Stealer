@@ -14,6 +14,7 @@ import com.github.programmerr47.photostealer.R;
 import com.github.programmerr47.photostealer.api.ApiGetMethod;
 import com.github.programmerr47.photostealer.api.ApiMethod;
 import com.github.programmerr47.photostealer.api.parsers.htmlparsers.PhotosParser;
+import com.github.programmerr47.photostealer.representation.PhotoStealerApplication;
 import com.github.programmerr47.photostealer.representation.adapters.items.PhotoItem;
 import com.github.programmerr47.photostealer.representation.tasks.ApiGetMethodTask;
 import com.github.programmerr47.photostealer.representation.tasks.AsyncTaskWithListener;
@@ -35,6 +36,8 @@ public class ScanFragment extends MainAcitivityFragment implements
 
     private EditText mUrlEditText;
     private View mScanButton;
+
+    private String mLoadingUrl;
 
     public static ScanFragment createInstance() {
         return new ScanFragment();
@@ -69,15 +72,18 @@ public class ScanFragment extends MainAcitivityFragment implements
             ViewCompat.setElevation(mToolbar, Constants.TOOLBAR_ELEVATION_DEFAULT);
         }
 
+        mToolbar.setTitle(PhotoStealerApplication.getAppContext().getString(R.string.app_name));
+        getMainActivityCallbacks().setToolbar(mToolbar);
+
         mScanButton.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.search_button) {
-            String url = mUrlEditText.getText().toString();
+            mLoadingUrl = mUrlEditText.getText().toString();
             ApiMethod<List<PhotoItem>> getPhotosMethod = new ApiGetMethod<List<PhotoItem>>()
-                    .setUrl(url)
+                    .setUrl(mLoadingUrl)
                     .setMethodResultParser(new PhotosParser());
 
             ApiGetMethodTask<List<PhotoItem>> task = new ApiGetMethodTask<List<PhotoItem>>();
@@ -88,7 +94,6 @@ public class ScanFragment extends MainAcitivityFragment implements
 
     @Override
     public void onTaskFinished(String taskName, Object extraObject) {
-        int t = 5;
         if (taskName.equals(ApiGetMethodTask.class.getName())) {
             @SuppressWarnings("unchecked")
             List<PhotoItem> items = (List<PhotoItem>) extraObject;
@@ -98,7 +103,7 @@ public class ScanFragment extends MainAcitivityFragment implements
                 items = new ArrayList<>();
             }
 
-            getMainActivityCallbacks().goToScanResultFragment(items);
+            getMainActivityCallbacks().goToScanResultFragment(mLoadingUrl, items);
         }
     }
 

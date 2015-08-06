@@ -9,6 +9,7 @@ import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
@@ -52,6 +53,19 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            goToScanResultFragment(null, null);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
 
@@ -87,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void goToScanResultFragment(List<PhotoItem> photos) {
+    public void goToScanResultFragment(String url, List<PhotoItem> photos) {
         if (isAnimating) {
             return;
         }
@@ -104,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements
                     R.animator.fragment_slide_out,
                     R.animator.fragment_slide_in,
                     R.animator.fragment_slide_out);
-            mScanResultFragment = ScanResultFragment.createInstance(photos);
+            mScanResultFragment = ScanResultFragment.createInstance(url, photos);
             transaction.replace(R.id.slide_fragment_container, mScanResultFragment);
             transaction.addToBackStack(null);
             transaction.commit();

@@ -12,5 +12,5 @@ import java.util.List;
  */
 public interface MainActivityCallbacks {
     void setToolbar(Toolbar toolbar);
-    void goToScanResultFragment(List<PhotoItem> photos);
+    void goToScanResultFragment(String url, List<PhotoItem> photos);
 }

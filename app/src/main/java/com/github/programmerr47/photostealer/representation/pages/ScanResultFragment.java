@@ -3,9 +3,15 @@ package com.github.programmerr47.photostealer.representation.pages;
 import android.animation.Animator;
 import android.animation.AnimatorInflater;
 import android.animation.AnimatorListenerAdapter;
+import android.annotation.TargetApi;
 import android.app.Activity;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.view.ViewCompat;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -17,6 +23,10 @@ import com.github.programmerr47.photostealer.representation.AnimationListener;
 import com.github.programmerr47.photostealer.R;
 import com.github.programmerr47.photostealer.representation.adapters.PhotoAdapter;
 import com.github.programmerr47.photostealer.representation.adapters.items.PhotoItem;
+import com.github.programmerr47.photostealer.representation.callback.RecyclerViewFirstItemFinder;
+import com.github.programmerr47.photostealer.representation.callback.impl.ToolbarHideScrollListener;
+import com.github.programmerr47.photostealer.util.AndroidUtils;
+import com.github.programmerr47.photostealer.util.Constants;
 
 import java.util.List;
 
@@ -35,10 +45,19 @@ public class ScanResultFragment extends MainAcitivityFragment {
     private RecyclerView mPhotosView;
     private PhotoAdapter mPhotosAdapter;
 
+    private String mUrl;
     private List<PhotoItem> mPhotoItems;
 
-    public static ScanResultFragment createInstance(List<PhotoItem> displayPhotos) {
+    private ToolbarHideScrollListener mScrollListener = new ToolbarHideScrollListener(new RecyclerViewFirstItemFinder() {
+        @Override
+        public int findFirstVisibleItemPosition(RecyclerView recyclerView) {
+            return ((LinearLayoutManager) mPhotosView.getLayoutManager()).findFirstVisibleItemPosition();
+        }
+    });
+
+    public static ScanResultFragment createInstance(String url, List<PhotoItem> displayPhotos) {
         ScanResultFragment result =  new ScanResultFragment();
+        result.mUrl = url;
         result.mPhotoItems = displayPhotos;
         return result;
     }
@@ -70,10 +89,25 @@ public class ScanResultFragment extends MainAcitivityFragment {
         mPhotosView = (RecyclerView) view.findViewById(R.id.photos);
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        if (AndroidUtils.hasLollipop()) {
+            mToolbar.setElevation(AndroidUtils.dpToPx(Constants.TOOLBAR_ELEVATION_DEFAULT));
+        } else {
+            ViewCompat.setElevation(mToolbar, Constants.TOOLBAR_ELEVATION_DEFAULT);
+        }
+
+        mToolbar.setTitle(mUrl);
+        getMainActivityCallbacks().setToolbar(mToolbar);
+        ActionBar actionBar = getActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
+        mScrollListener.addView(mToolbar);
+
+        mPhotosView.addOnScrollListener(mScrollListener);
         mPhotosView.setLayoutManager(new GridLayoutManager(getActivity(), DEFAULT_NUM_OF_COLUMNS));
         mPhotosView.getViewTreeObserver().addOnGlobalLayoutListener(
                 new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -104,5 +138,9 @@ public class ScanResultFragment extends MainAcitivityFragment {
 
     public Toolbar getToolbar() {
         return mToolbar;
+    }
+    private ActionBar getActionBar() {
+        AppCompatActivity parentActivity = (AppCompatActivity) getActivity();
+        return parentActivity.getSupportActionBar();
     }
 }
