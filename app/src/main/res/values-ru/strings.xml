@@ -7,4 +7,8 @@
     <!-- SEARCH PAGE -->
     <string name="scan">Сканировать</string>
     <string name="url_hint">Напиши сюда url страницы</string>
+
+    <!-- NETWORK STATUSES -->
+    <string name="network_connected">Сеть подключена</string>
+    <string name="waiting_for_connection">Ожидание подключения&#8230;</string>
 </resources>

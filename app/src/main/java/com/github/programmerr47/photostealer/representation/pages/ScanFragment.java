@@ -1,8 +1,13 @@
 package com.github.programmerr47.photostealer.representation.pages;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.TransitionDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.ViewCompat;
@@ -44,18 +49,38 @@ public class ScanFragment extends MainAcitivityFragment implements
     private Toolbar mToolbar;
 
     private EditText mUrlEditText;
+    private TextView mConnectionStateLabel;
     private View mScanButton;
     private View mProgress;
     private View mButtonLabel;
+    private View mNetworkStateContainer;
 
     private String mLoadingUrl;
     private int mScanButtonFirstWidth;
     private int mProgressWidth;
 
     private boolean isImagesLoading;
+    private Boolean isNetworkConnected;
 
     private int mDisabledSearchButtonColor = PhotoStealerApplication.getAppContext().getResources().getColor(R.color.accent_light);
     private int mEnabledSearchButtonColor = PhotoStealerApplication.getAppContext().getResources().getColor(R.color.accent);
+
+    private Animator mCurrentAnimation;
+
+    private BroadcastReceiver mNetworkStateReciever = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals("android.net.conn.CONNECTIVITY_CHANGE")) {
+                boolean isNetworkConnected = AndroidUtils.isNetworkConnected();
+                changeConnectionStateViews(isNetworkConnected);
+
+                if (isNetworkConnected != ScanFragment.this.isNetworkConnected) {
+                    runProperNetworkAnimation(isNetworkConnected);
+                    ScanFragment.this.isNetworkConnected = isNetworkConnected;
+                }
+            }
+        }
+    };
 
     public static ScanFragment createInstance() {
         return new ScanFragment();
@@ -79,6 +104,8 @@ public class ScanFragment extends MainAcitivityFragment implements
         mScanButton = view.findViewById(R.id.search_button);
         mProgress = view.findViewById(R.id.loading_progress);
         mButtonLabel = view.findViewById(R.id.search_label);
+        mNetworkStateContainer = view.findViewById(R.id.connection_state_container);
+        mConnectionStateLabel = (TextView) view.findViewById(R.id.connection_state_label);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -88,8 +115,10 @@ public class ScanFragment extends MainAcitivityFragment implements
 
         if (AndroidUtils.hasLollipop()) {
             mToolbar.setElevation(AndroidUtils.dpToPx(Constants.TOOLBAR_ELEVATION_DEFAULT));
+            mNetworkStateContainer.setElevation(AndroidUtils.dpToPx(2));
         } else {
-            ViewCompat.setElevation(mToolbar, Constants.TOOLBAR_ELEVATION_DEFAULT);
+            ViewCompat.setElevation(mToolbar, AndroidUtils.dpToPx(Constants.TOOLBAR_ELEVATION_DEFAULT));
+            ViewCompat.setElevation(mNetworkStateContainer, AndroidUtils.dpToPx(2));
         }
 
         mToolbar.setTitle(PhotoStealerApplication.getAppContext().getString(R.string.app_name));
@@ -123,8 +152,7 @@ public class ScanFragment extends MainAcitivityFragment implements
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (!isImagesLoading) {
-                    ColorDrawable[] color;
+                if (!isImagesLoading && isNetworkConnected) {
                     boolean hasText = s.length() > 0;
                     if (s.length() > 0) {
                         if (wasText != hasText) {
@@ -137,7 +165,7 @@ public class ScanFragment extends MainAcitivityFragment implements
                     }
 
                     if (hasText) {
-                        mScanButton.setEnabled(true);
+                        mScanButton.setEnabled(isNetworkConnected);
                     } else {
                         mScanButton.setEnabled(false);
                     }
@@ -162,6 +190,29 @@ public class ScanFragment extends MainAcitivityFragment implements
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        boolean isNetworkConnected = AndroidUtils.isNetworkConnected();
+        changeConnectionStateViews(isNetworkConnected);
+        if (this.isNetworkConnected == null || this.isNetworkConnected != isNetworkConnected) {
+            runProperNetworkAnimation(isNetworkConnected);
+        } else if (!isNetworkConnected) {
+            mNetworkStateContainer.setY(getDeclaredToolbarHeight());
+        }
+        this.isNetworkConnected = isNetworkConnected;
+
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
+        getActivity().registerReceiver(mNetworkStateReciever, filter);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        getActivity().unregisterReceiver(mNetworkStateReciever);
+    }
+
+    @Override
     public void onClick(View v) {
         if (v.getId() == R.id.search_button) {
             scanUrlAndGoToPhotoPage();
@@ -180,8 +231,16 @@ public class ScanFragment extends MainAcitivityFragment implements
             }
 
             AnimationUtil.hideProgress(mProgress, mButtonLabel, mScanButton, mScanButtonFirstWidth);
-            AnimationUtil.changeColorOfView(mScanButton, mDisabledSearchButtonColor, mEnabledSearchButtonColor);
-            mScanButton.setEnabled(true);
+
+            int resultColor;
+            if (isNetworkConnected) {
+                resultColor = mEnabledSearchButtonColor;
+            } else {
+                resultColor = mDisabledSearchButtonColor;
+            }
+
+            AnimationUtil.changeColorOfView(mScanButton, mDisabledSearchButtonColor, resultColor);
+            mScanButton.setEnabled(isNetworkConnected);
 
             forceCloseKeyboardIfNecessary();
             getMainActivityCallbacks().goToScanResultFragment(mLoadingUrl, items);
@@ -215,5 +274,41 @@ public class ScanFragment extends MainAcitivityFragment implements
         ApiGetMethodTask<List<PhotoItem>> task = new ApiGetMethodTask<List<PhotoItem>>();
         task.setOnTaskFinishedListener(this);
         task.execute(getPhotosMethod);
+    }
+
+    private void changeConnectionStateViews(boolean isNetworkConnected) {
+        mScanButton.setEnabled(isNetworkConnected);
+        if (isNetworkConnected) {
+            AnimationUtil.changeColorOfView(mScanButton, mDisabledSearchButtonColor, mEnabledSearchButtonColor);
+            mConnectionStateLabel.setText(PhotoStealerApplication.getAppContext().getString(R.string.network_connected));
+            mNetworkStateContainer.setBackgroundDrawable(new ColorDrawable(PhotoStealerApplication.getAppContext().getResources().getColor(R.color.good_state)));
+        } else {
+            AnimationUtil.changeColorOfView(mScanButton, mEnabledSearchButtonColor, mDisabledSearchButtonColor);
+            mConnectionStateLabel.setText(PhotoStealerApplication.getAppContext().getString(R.string.waiting_for_connection));
+            mNetworkStateContainer.setBackgroundDrawable(new ColorDrawable(PhotoStealerApplication.getAppContext().getResources().getColor(R.color.wrong_state)));
+        }
+    }
+
+    private float getDeclaredToolbarHeight() {
+        return PhotoStealerApplication.getAppContext().getResources().getDimension(R.dimen.toolbar_height);
+    }
+
+    private void runProperNetworkAnimation(boolean isNetworkConnected) {
+        if (mCurrentAnimation != null && mCurrentAnimation.isStarted()) {
+            mCurrentAnimation.cancel();
+        }
+
+        if (isNetworkConnected) {
+            mCurrentAnimation = AnimationUtil.showAndHideSuccessNetworkState(mNetworkStateContainer, getDeclaredToolbarHeight());
+            mCurrentAnimation.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    super.onAnimationEnd(animation);
+                    int t = 5;
+                }
+            });
+        } else {
+            mCurrentAnimation = AnimationUtil.showNetworkState(mNetworkStateContainer, getDeclaredToolbarHeight());
+        }
     }
 }

@@ -6,4 +6,8 @@
     <!-- SEARCH PAGE -->
     <string name="scan">Scan</string>
     <string name="url_hint">Write url for scan images</string>
+
+    <!-- NETWORK STATUSES -->
+    <string name="network_connected">Network connected</string>
+    <string name="waiting_for_connection">Waiting for connection&#8230;</string>
 </resources>
