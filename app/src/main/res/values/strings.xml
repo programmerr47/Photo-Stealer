@@ -10,4 +10,7 @@
     <!-- NETWORK STATUSES -->
     <string name="network_connected">Network connected</string>
     <string name="waiting_for_connection">Waiting for connection&#8230;</string>
+
+    <!-- SEARCH RESULT PAGE -->
+    <string name="no_photos">There is no images.\n Get back and write another url</string>
 </resources>

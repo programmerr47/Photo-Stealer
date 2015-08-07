@@ -11,4 +11,7 @@
     <!-- NETWORK STATUSES -->
     <string name="network_connected">Сеть подключена</string>
     <string name="waiting_for_connection">Ожидание подключения&#8230;</string>
+
+    <!-- SEARCH RESULT PAGE -->
+    <string name="no_photos">Картинок не найдено.\n Возвращайтесь и введите другой url</string>
 </resources>

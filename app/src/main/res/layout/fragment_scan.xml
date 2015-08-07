@@ -64,7 +64,8 @@
             android:layout_gravity="center"
             android:text="@string/waiting_for_connection"
             android:textColor="@color/primary_text_dark"
-            android:textSize="15sp"/>
+            android:textSize="15sp"
+            app:fontName="Roboto-Regular.ttf"/>
 
     </FrameLayout>
 

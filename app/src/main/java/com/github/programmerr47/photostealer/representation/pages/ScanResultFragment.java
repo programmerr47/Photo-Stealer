@@ -44,6 +44,7 @@ public class ScanResultFragment extends MainActivityFragment {
 
     private RecyclerView mPhotosView;
     private PhotoAdapter mPhotosAdapter;
+    private View mEmptyPhotosLabel;
 
     private String mUrl;
     private List<PhotoItem> mPhotoItems;
@@ -87,6 +88,7 @@ public class ScanResultFragment extends MainActivityFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         mToolbar = (Toolbar) view.findViewById(R.id.toolbar);
         mPhotosView = (RecyclerView) view.findViewById(R.id.photos);
+        mEmptyPhotosLabel = view.findViewById(R.id.empty_photos_label);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -119,6 +121,12 @@ public class ScanResultFragment extends MainActivityFragment {
                         mPhotosView.setAdapter(mPhotosAdapter);
                     }
                 });
+
+        if (mPhotoItems.isEmpty()) {
+            mEmptyPhotosLabel.setVisibility(View.VISIBLE);
+        } else {
+            mEmptyPhotosLabel.setVisibility(View.GONE);
+        }
     }
 
     @Override
