@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--GENERATED-->
+    <string name="app_name">Вор фотографий</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- SEARCH PAGE -->
+    <string name="scan">Сканировать</string>
+    <string name="url_hint">Напиши сюда url страницы</string>
+</resources>
