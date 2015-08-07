@@ -34,7 +34,7 @@ import java.util.List;
  * @author Michael Spitsin
  * @since 2015-08-06
  */
-public class ScanResultFragment extends MainAcitivityFragment {
+public class ScanResultFragment extends MainActivityFragment {
 
     private static final int DEFAULT_NUM_OF_COLUMNS = 2;
 
@@ -79,7 +79,7 @@ public class ScanResultFragment extends MainAcitivityFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstatnceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_scan_result, container, false);
     }
 

@@ -41,7 +41,7 @@ import java.util.List;
  * @author Michael Spitsin
  * @since 2015-08-06
  */
-public class ScanFragment extends MainAcitivityFragment implements
+public class ScanFragment extends MainActivityFragment implements
         View.OnClickListener,
         AsyncTaskWithListener.OnTaskFinishedListener {
 
@@ -67,7 +67,7 @@ public class ScanFragment extends MainAcitivityFragment implements
     private Animator mNetworkStateAnimation;
     private Animator mSearchAnimation;
 
-    private BroadcastReceiver mNetworkStateReciever = new BroadcastReceiver() {
+    private BroadcastReceiver mNetworkStateReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals("android.net.conn.CONNECTIVITY_CHANGE")) {
@@ -93,7 +93,7 @@ public class ScanFragment extends MainAcitivityFragment implements
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstatnceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_scan, container, false);
     }
 
@@ -203,13 +203,13 @@ public class ScanFragment extends MainAcitivityFragment implements
 
         IntentFilter filter = new IntentFilter();
         filter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
-        getActivity().registerReceiver(mNetworkStateReciever, filter);
+        getActivity().registerReceiver(mNetworkStateReceiver, filter);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        getActivity().unregisterReceiver(mNetworkStateReciever);
+        getActivity().unregisterReceiver(mNetworkStateReceiver);
     }
 
     @Override
@@ -279,7 +279,7 @@ public class ScanFragment extends MainAcitivityFragment implements
                 .setUrl(mLoadingUrl)
                 .setMethodResultParser(new PhotosParser());
 
-        ApiGetMethodTask<List<PhotoItem>> task = new ApiGetMethodTask<List<PhotoItem>>();
+        ApiGetMethodTask<List<PhotoItem>> task = new ApiGetMethodTask<>();
         task.setOnTaskFinishedListener(this);
         task.execute(getPhotosMethod);
     }
