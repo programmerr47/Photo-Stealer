@@ -16,14 +16,4 @@
         <item name="android:textColor">@color/secondary_text</item>
     </style>
 
-    <style name="ChatTitle">
-        <item name="android:textColor">#ffffff</item>
-        <item name="android:textSize">18sp</item>
-    </style>
-
-    <style name="ChatSubTitle">
-        <item name="android:textColor">#d2eafc</item>
-        <item name="android:textSize">14sp</item>
-    </style>
-
 </resources>
