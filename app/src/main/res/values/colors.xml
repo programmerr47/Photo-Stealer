@@ -10,4 +10,6 @@
     <color name="secondary_text">#727272</color>
     <color name="icons">#FFFFFF</color>
     <color name="divider">#B6B6B6</color>
+    <color name="wrong_state">#FF5252</color>
+    <color name="good_state">#8BC34a</color>
 </resources>

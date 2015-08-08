@@ -55,7 +55,7 @@ public class BitmapUtils {
         }
     }
 
-    public static void copyStream(InputStream is, OutputStream os)
+    private static void copyStream(InputStream is, OutputStream os)
     {
         final int buffer_size=1024;
         try

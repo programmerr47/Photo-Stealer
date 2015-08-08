@@ -9,13 +9,83 @@ import android.support.v4.view.ViewCompat;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
+
+import com.github.programmerr47.photostealer.R;
+import com.github.programmerr47.photostealer.representation.PhotoStealerApplication;
 
 /**
  * @author Michael Spitsin
  * @since 2015-08-06
  */
 public class AnimationUtil {
+
+    public static Animator showAndHideSuccessNetworkState(final View container, float offsetHeight) {
+        int toolbarHeight = (int) offsetHeight;
+        int containerHeight = container.getMeasuredHeight();
+        if (containerHeight == 0) {
+            containerHeight = (int) PhotoStealerApplication.getAppContext().getResources().getDimension(R.dimen.connection_state_height);
+        }
+
+        container.setY(toolbarHeight - containerHeight);
+
+        final ValueAnimator yAnim = ValueAnimator.ofInt(toolbarHeight - containerHeight, toolbarHeight);
+        yAnim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                int val = (Integer) animation.getAnimatedValue();
+                container.setY(val);
+            }
+        });
+
+        final ValueAnimator yAnimReverse = ValueAnimator.ofInt(toolbarHeight, toolbarHeight - containerHeight);
+        yAnimReverse.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                int val = (Integer) animation.getAnimatedValue();
+                container.setY(val);
+            }
+        });
+
+        yAnim.setDuration(Constants.DEFAULT_ANIMATION_DURATION);
+        yAnimReverse.setDuration(Constants.DEFAULT_ANIMATION_DURATION);
+
+        yAnim.setInterpolator(new DecelerateInterpolator());
+        yAnimReverse.setInterpolator(new AccelerateInterpolator());
+
+        AnimatorSet animation = new AnimatorSet();
+        animation
+                .play(yAnimReverse)
+                .after(3000)
+                .after(yAnim);
+        animation.start();
+        return animation;
+    }
+
+    public static Animator showNetworkState(final View container, float offsetHeight) {
+        int toolbarHeight = (int) offsetHeight;
+        int containerHeight = container.getMeasuredHeight();
+        container.setY(toolbarHeight - containerHeight);
+
+        final ValueAnimator yAnim = ValueAnimator.ofInt(toolbarHeight - containerHeight, toolbarHeight);
+        yAnim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                int val = (Integer) animation.getAnimatedValue();
+                container.setY(val);
+            }
+        });
+
+        yAnim.setDuration(Constants.DEFAULT_ANIMATION_DURATION);
+
+        AnimatorSet animation = new AnimatorSet();
+        animation.setInterpolator(new DecelerateInterpolator());
+
+        animation.play(yAnim);
+        animation.start();
+        return animation;
+    }
 
     public static Animator showProgress(final View progressView, final View hidingView, final View container) {
         final ValueAnimator alphaAnim = ValueAnimator.ofFloat(0, 1);

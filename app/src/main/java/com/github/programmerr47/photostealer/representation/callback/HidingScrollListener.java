@@ -14,7 +14,7 @@ public abstract class HidingScrollListener extends RecyclerView.OnScrollListener
     private boolean mControlsVisible = true;
     private RecyclerViewFirstItemFinder mFirstItemFinder;
 
-    public HidingScrollListener(@NonNull RecyclerViewFirstItemFinder firstItemFinder) {
+    protected HidingScrollListener(@NonNull RecyclerViewFirstItemFinder firstItemFinder) {
         this.mFirstItemFinder = firstItemFinder;
     }
 
@@ -46,7 +46,7 @@ public abstract class HidingScrollListener extends RecyclerView.OnScrollListener
         }
     }
 
-    public abstract void onHide();
+    protected abstract void onHide();
 
-    public abstract void onShow();
+    protected abstract void onShow();
 }

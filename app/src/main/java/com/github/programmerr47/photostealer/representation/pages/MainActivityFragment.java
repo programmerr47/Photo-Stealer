@@ -7,7 +7,7 @@ import android.app.Fragment;
  * @author Michael Spitsin
  * @since 2015-08-06
  */
-public class MainAcitivityFragment extends Fragment {
+public class MainActivityFragment extends Fragment {
 
     private MainActivityCallbacks mMainActivityCallbacks;
 

@@ -2,6 +2,8 @@ package com.github.programmerr47.photostealer.util;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.util.TypedValue;
@@ -27,5 +29,16 @@ public class AndroidUtils {
 
     public static float dpToPx(int dp) {
         return dpToPx(PhotoStealerApplication.getAppContext(), dp);
+    }
+
+    public static boolean isNetworkConnected(@NonNull Context context) {
+        ConnectivityManager cm = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        return activeNetwork != null &&
+               activeNetwork.isConnectedOrConnecting();
+    }
+
+    public static boolean isNetworkConnected() {
+        return isNetworkConnected(PhotoStealerApplication.getAppContext());
     }
 }

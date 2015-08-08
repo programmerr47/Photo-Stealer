@@ -34,7 +34,7 @@ import java.util.List;
  * @author Michael Spitsin
  * @since 2015-08-06
  */
-public class ScanResultFragment extends MainAcitivityFragment {
+public class ScanResultFragment extends MainActivityFragment {
 
     private static final int DEFAULT_NUM_OF_COLUMNS = 2;
 
@@ -44,6 +44,7 @@ public class ScanResultFragment extends MainAcitivityFragment {
 
     private RecyclerView mPhotosView;
     private PhotoAdapter mPhotosAdapter;
+    private View mEmptyPhotosLabel;
 
     private String mUrl;
     private List<PhotoItem> mPhotoItems;
@@ -79,7 +80,7 @@ public class ScanResultFragment extends MainAcitivityFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstatnceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_scan_result, container, false);
     }
 
@@ -87,6 +88,7 @@ public class ScanResultFragment extends MainAcitivityFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         mToolbar = (Toolbar) view.findViewById(R.id.toolbar);
         mPhotosView = (RecyclerView) view.findViewById(R.id.photos);
+        mEmptyPhotosLabel = view.findViewById(R.id.empty_photos_label);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -119,6 +121,12 @@ public class ScanResultFragment extends MainAcitivityFragment {
                         mPhotosView.setAdapter(mPhotosAdapter);
                     }
                 });
+
+        if (mPhotoItems.isEmpty()) {
+            mEmptyPhotosLabel.setVisibility(View.VISIBLE);
+        } else {
+            mEmptyPhotosLabel.setVisibility(View.GONE);
+        }
     }
 
     @Override

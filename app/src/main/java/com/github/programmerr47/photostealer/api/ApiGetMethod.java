@@ -3,7 +3,6 @@ package com.github.programmerr47.photostealer.api;
 import android.support.annotation.NonNull;
 
 import com.github.programmerr47.photostealer.api.parsers.ResponseParser;
-import com.github.programmerr47.photostealer.representation.adapters.PhotoAdapter;
 import com.github.programmerr47.photostealer.util.Utils;
 
 import java.io.IOException;
@@ -18,8 +17,8 @@ import java.net.URL;
  */
 public class ApiGetMethod<Response> implements ApiMethod<Response> {
 
-    protected String mUrl;
-    protected ResponseParser<Response> mResultParser;
+    private String mUrl;
+    private ResponseParser<Response> mResultParser;
 
     @Override
     public Response execute() throws Exception {

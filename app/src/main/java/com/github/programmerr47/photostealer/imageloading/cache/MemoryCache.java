@@ -48,7 +48,7 @@ public class MemoryCache {
      * Retrieves size of given bitmap in bytes.
      *
      * @param bitmap given bitmap
-     * @return size in bytes or zero if butmap is null
+     * @return size in bytes or zero if bitmap is null
      */
     private int getBitmapSize(Bitmap bitmap) {
         if (bitmap != null) {
